@@ -26,6 +26,12 @@ function importRedirects(ev) {
 	if (!file) {
 		return;
 	}
+	// Reject files larger than 5 MB to prevent DoS
+	var maxFileSize = 5 * 1024 * 1024;
+	if (file.size > maxFileSize) {
+		showMessage('Import file is too large (max 5 MB).');
+		return;
+	}
 	var reader = new FileReader();
 	
 	reader.onload = function(e) {
@@ -37,14 +43,37 @@ function importRedirects(ev) {
 			return;
 		}
 
-		if (!data.redirects) {
-			showMessage('Invalid JSON, missing "redirects" property');
+		if (!data.redirects || !Array.isArray(data.redirects)) {
+			showMessage('Invalid JSON, missing or invalid "redirects" property');
+			return;
+		}
+
+		var maxImportSize = 5000;
+		if (data.redirects.length > maxImportSize) {
+			showMessage('Import rejected: file contains more than ' + maxImportSize + ' redirects.');
 			return;
 		}
 
 		var imported = 0, existing = 0;
 		for (var i = 0; i < data.redirects.length; i++) {
-			var r = new Redirect(data.redirects[i]);
+			var raw = data.redirects[i];
+			if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+				continue;
+			}
+			// Sanitize: only allow known properties with correct types
+			var sanitized = {
+				description: typeof raw.description === 'string' ? raw.description.substring(0, 1000) : '',
+				exampleUrl: typeof raw.exampleUrl === 'string' ? raw.exampleUrl.substring(0, 2000) : '',
+				includePattern: typeof raw.includePattern === 'string' ? raw.includePattern.substring(0, 2000) : '',
+				excludePattern: typeof raw.excludePattern === 'string' ? raw.excludePattern.substring(0, 2000) : '',
+				redirectUrl: typeof raw.redirectUrl === 'string' ? raw.redirectUrl.substring(0, 2000) : '',
+				patternDesc: typeof raw.patternDesc === 'string' ? raw.patternDesc.substring(0, 1000) : '',
+				patternType: (raw.patternType === 'W' || raw.patternType === 'R') ? raw.patternType : 'W',
+				processMatches: ['noProcessing','urlEncode','urlDecode','doubleUrlDecode','base64decode'].indexOf(raw.processMatches) !== -1 ? raw.processMatches : 'noProcessing',
+				disabled: !!raw.disabled,
+				appliesTo: Array.isArray(raw.appliesTo) ? raw.appliesTo.filter(function(t) { return typeof t === 'string' && t in Redirect.requestTypes; }) : ['main_frame']
+			};
+			var r = new Redirect(sanitized);
 			r.updateExampleResult();
 			if (REDIRECTS.some(function(i) { return new Redirect(i).equals(r);})) {
 				existing++;

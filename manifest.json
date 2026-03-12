@@ -13,6 +13,8 @@
     "128": "images/icon-light-theme-128.png"
   },
 
+  "content_security_policy": "script-src 'self'; object-src 'self'",
+
   "permissions": [
     "webRequest",
     "webRequestBlocking",

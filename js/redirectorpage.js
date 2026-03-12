@@ -34,13 +34,12 @@ function toggleSyncSetting() {
 			showMessage('Sync is disabled - local storage will be used!', true);
 		} else if(response.message.indexOf("Sync Not Possible")>-1){
 			options.isSyncEnabled = false;
-			chrome.storage.local.set({isSyncEnabled: $s.isSyncEnabled}, function(){
+			chrome.storage.local.set({isSyncEnabled: options.isSyncEnabled}, function(){
 			 // console.log("set back to false");
 			});
 			showMessage(response.message, false);
 		}
 		else {
-			alert(response.message)
 			showMessage('Error occured when trying to change Sync settings. Look at the logs and raise an issue',false);
 		}
 		el('#storage-sync-option input').checked = options.isSyncEnabled;
@@ -330,7 +329,21 @@ function pageLoad() {
 			return;
 		}
 
-		let handler = window[action];
+		// Only allow known action handlers to prevent arbitrary function execution
+		var allowedActions = {
+			toggleDisabled: toggleDisabled,
+			editRedirect: editRedirect,
+			confirmDeleteRedirect: confirmDeleteRedirect,
+			moveUp: moveUp,
+			moveDown: moveDown,
+			moveUpTop: moveUpTop,
+			moveDownBottom: moveDownBottom,
+			duplicateRedirect: duplicateRedirect
+		};
+		let handler = allowedActions[action];
+		if (!handler) {
+			return;
+		}
 
 		let index = parseInt(ev.target.getAttribute('data-index'));
 
