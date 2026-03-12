@@ -671,3 +671,282 @@ footer small a:hover {
     border-radius: 2px;
   }
 }
+
+/* Mobile responsive styles for Firefox Android */
+@media (max-width: 768px) {
+
+  body {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 32px;
+    letter-spacing: 1.5px;
+  }
+
+  h5 {
+    font-size: 16px;
+  }
+
+  /* Menu buttons - stack vertically on mobile */
+  #menu {
+    margin: 20px auto 8px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    max-width: 95%;
+  }
+
+  #menu .btn.large,
+  #menu label.btn.large,
+  #menu span {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  #menu .btn.large {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 8px;
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  #menu span .btn.large,
+  #menu span label.btn.large {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  /* Redirect table - full width */
+  .redirect-table {
+    max-width: 100%;
+    margin: 0;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
+
+  /* Redirect rows - stacked layout */
+  .redirect-row {
+    padding: 12px 8px;
+    line-height: 22px;
+  }
+
+  .redirect-info {
+    display: block;
+  }
+
+  .redirect-info div {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .redirect-info div label {
+    display: block;
+    text-align: left;
+    padding: 2px 0;
+    width: auto;
+    font-size: 12px;
+    color: #888;
+  }
+
+  .redirect-info div p {
+    display: block;
+    max-width: 100%;
+    word-break: break-all;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+  }
+
+  .redirect-row h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .redirect-row label {
+    width: auto;
+    text-align: left;
+  }
+
+  /* Action buttons on redirect rows - larger touch targets */
+  .redirect-row button {
+    font-size: 14px;
+    margin: 4px 4px 4px 0;
+    padding: 8px 4px;
+    width: 70px;
+    min-height: 36px;
+  }
+
+  .move-up-btn, .move-down-btn, .move-downbottom-btn, .move-uptop-btn {
+    width: 40px !important;
+  }
+
+  /* Edit form - full screen on mobile */
+  #edit-redirect-form {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    left: 0;
+    top: 0;
+    margin-left: 0;
+    transform: none;
+    border-radius: 0;
+    border: none;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .form-grid {
+    display: block;
+  }
+
+  .form-grid > div {
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .form-grid > div > label {
+    display: block;
+    text-align: left;
+    padding: 4px 0;
+    width: auto;
+    font-size: 14px;
+  }
+
+  .input-cell {
+    padding-top: 0;
+  }
+
+  .form-grid div input[type='text'] {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    padding: 10px 8px;
+    min-height: 44px;
+    border-radius: 4px;
+  }
+
+  .example-result {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  #wildcardtype, #regextype {
+    display: block;
+    margin: 8px 0;
+    padding: 8px 0;
+    font-size: 16px;
+  }
+
+  #wildcardtype input, #regextype input {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+  }
+
+  .advanced div .input-cell select {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  #apply-to label {
+    display: block;
+    padding: 6px 0;
+    font-size: 15px;
+    width: auto;
+    text-align: left;
+  }
+
+  #apply-to label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+  }
+
+  .button-container {
+    margin-top: 16px;
+    padding-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .button-container .btn.large {
+    flex: 1;
+    min-height: 44px;
+    font-size: 16px;
+    padding: 10px 8px;
+  }
+
+  /* Delete form - full width on mobile */
+  #delete-redirect-form {
+    position: fixed;
+    width: 100%;
+    max-width: 100%;
+    left: 0;
+    top: 50%;
+    margin-left: 0;
+    margin-top: -150px;
+    height: auto;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 0;
+  }
+
+  #delete-redirect-form h3 {
+    font-size: 16px;
+  }
+
+  #delete-redirect-form div label:first-child {
+    width: auto;
+    display: block;
+    text-align: left;
+  }
+
+  #delete-redirect-form div span {
+    width: 100%;
+    display: block;
+  }
+
+  #delete-redirect-form .button-container .btn.large {
+    min-height: 44px;
+    font-size: 14px;
+    padding: 10px 6px;
+  }
+
+  /* Toggle container adjustment */
+  .toggle-container {
+    top: 5%;
+    right: 3%;
+  }
+
+  /* Message box */
+  #message-box {
+    max-width: 100%;
+    margin: 10px 0;
+    border-radius: 0;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  /* Storage sync option */
+  #storage-sync-option {
+    padding: 12px 8px;
+    font-size: 16px;
+  }
+}

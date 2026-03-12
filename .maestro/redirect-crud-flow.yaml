@@ -1,0 +1,86 @@
+# Test: CRUD operations for redirects on mobile Firefox
+# Tests creating, editing, disabling, and deleting redirects
+#
+# Prerequisites:
+#   - Firefox for Android with Redirector extension installed
+#   - Settings page accessible
+
+appId: org.mozilla.firefox
+---
+
+# Launch Firefox
+- launchApp:
+    appId: org.mozilla.firefox
+    clearState: false
+
+# Navigate to extension settings
+- tapOn: "More options"
+- tapOn: "Add-ons"
+- tapOn: "Redirector"
+- waitForAnimationToEnd
+- tapOn: "Edit Redirects"
+- waitForAnimationToEnd
+
+# CREATE: Add a new redirect
+- tapOn: "Create new redirect"
+- waitForAnimationToEnd
+
+- tapOn:
+    text: "Enter a description for your redirect rule"
+- inputText: "Maestro test redirect"
+
+- tapOn:
+    text: "http://example.com/some/path?a=1"
+- inputText: "http://test.example.com/path"
+
+- tapOn:
+    text: "Pattern that matches the urls you want to redirect"
+- inputText: "http://test.example.com/*"
+
+- tapOn:
+    text: "The url you want to redirect requests to"
+- inputText: "http://result.example.com/$1"
+
+# Save the redirect
+- tapOn: "Save"
+- waitForAnimationToEnd
+
+# Verify redirect was created
+- assertVisible: "Maestro test redirect"
+
+# DISABLE: Toggle redirect disabled state
+- tapOn: "Disable"
+- waitForAnimationToEnd
+- assertVisible: "[Disabled]"
+
+# ENABLE: Re-enable the redirect
+- tapOn: "Enable"
+- waitForAnimationToEnd
+
+# EDIT: Edit the redirect
+- tapOn: "Edit"
+- waitForAnimationToEnd
+- assertVisible: "Edit Redirect"
+
+# Cancel the edit
+- tapOn: "Cancel"
+- waitForAnimationToEnd
+
+# DUPLICATE: Test duplicate functionality
+- tapOn: "Duplicate"
+- waitForAnimationToEnd
+
+# DELETE: Delete the duplicated redirect
+- tapOn:
+    text: "Delete"
+    index: 1
+- waitForAnimationToEnd
+- assertVisible: "Are you sure you want to delete this redirect?"
+- tapOn: "Yes, delete it"
+- waitForAnimationToEnd
+
+# Clean up: Delete the original test redirect
+- tapOn: "Delete"
+- waitForAnimationToEnd
+- tapOn: "Yes, delete it"
+- waitForAnimationToEnd

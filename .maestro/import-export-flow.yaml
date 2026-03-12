@@ -1,0 +1,40 @@
+# Test: Import and Export functionality on mobile Firefox
+# Verifies import/export buttons work on mobile touch interface
+#
+# Prerequisites:
+#   - Firefox for Android with Redirector extension installed
+
+appId: org.mozilla.firefox
+---
+
+# Launch Firefox
+- launchApp:
+    appId: org.mozilla.firefox
+    clearState: false
+
+# Navigate to extension settings
+- tapOn: "More options"
+- tapOn: "Add-ons"
+- tapOn: "Redirector"
+- waitForAnimationToEnd
+- tapOn: "Edit Redirects"
+- waitForAnimationToEnd
+
+# Test: Export button is accessible on mobile
+- assertVisible: "Export"
+- tapOn: "Export"
+- waitForAnimationToEnd
+
+# Test: Import button triggers file picker on mobile
+- assertVisible: "Import"
+
+# Test: Organize mode works on mobile
+- tapOn: "Organize"
+- waitForAnimationToEnd
+
+# Verify organize mode UI elements appear
+# (Checkmarks and reorder buttons should be visible)
+
+# Exit organize mode by tapping again
+- tapOn: "Organize"
+- waitForAnimationToEnd

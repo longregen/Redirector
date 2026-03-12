@@ -104,3 +104,60 @@ table {
 		color: rgb(53,180,75);
 	}
   }
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+
+	body {
+		max-width: 100%;
+		margin: 0;
+		padding: 16px;
+		box-sizing: border-box;
+		border: none;
+		border-radius: 0;
+		font-size: 15px;
+		line-height: 24px;
+	}
+
+	h1 {
+		font-size: 24px;
+		margin-bottom: 30px;
+	}
+
+	h4 {
+		font-size: 20px;
+	}
+
+	table {
+		display: block;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		margin: 10px 0;
+		font-size: 14px;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	th {
+		white-space: nowrap;
+		font-size: 13px;
+		padding-right: 8px;
+	}
+
+	.url, .pattern {
+		word-break: break-all;
+	}
+
+	.pattern {
+		font-size: 13px;
+		padding: 2px 4px;
+	}
+
+	a {
+		word-break: break-word;
+	}
+
+	ul, ol {
+		padding-left: 20px;
+	}
+}
