@@ -41,9 +41,9 @@ setInterval(function() {
 			delete ignoreNextRequest[url];
 		}
 	}
-	for (var url in justRedirected) {
-		if (Object.prototype.hasOwnProperty.call(justRedirected, url) && (now - justRedirected[url].timestamp) > staleThreshold) {
-			delete justRedirected[url];
+	for (var key in justRedirected) {
+		if (Object.prototype.hasOwnProperty.call(justRedirected, key) && (now - justRedirected[key].timestamp) > staleThreshold) {
+			delete justRedirected[key];
 		}
 	}
 }, 60000); // Run cleanup every 60 seconds

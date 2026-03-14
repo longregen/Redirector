@@ -338,7 +338,8 @@ function pageLoad() {
 			moveDown: moveDown,
 			moveUpTop: moveUpTop,
 			moveDownBottom: moveDownBottom,
-			duplicateRedirect: duplicateRedirect
+			duplicateRedirect: duplicateRedirect,
+			toggleGrouping: toggleGrouping
 		};
 		let handler = allowedActions[action];
 		if (!handler) {

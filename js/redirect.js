@@ -279,7 +279,8 @@ Redirect.prototype = {
 		if (trimmed.indexOf('javascript:') === 0 ||
 			trimmed.indexOf('data:') === 0 ||
 			trimmed.indexOf('vbscript:') === 0 ||
-			trimmed.indexOf('blob:') === 0) {
+			trimmed.indexOf('blob:') === 0 ||
+			trimmed.indexOf('file:') === 0) {
 			return false;
 		}
 		return true;
