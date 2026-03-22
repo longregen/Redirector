@@ -1,0 +1,21 @@
+{
+  "name": "redirector",
+  "version": "1.0.0",
+  "description": "Web browser extension (Firefox, Vivaldi, Chrome, Opera, Edge) to redirect URLs based on regex or wildcard patterns.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:mobile": "npx playwright test --project mobile-firefox",
+    "test:desktop": "npx playwright test --project desktop-chrome"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:46641/git/longregen/Redirector"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}

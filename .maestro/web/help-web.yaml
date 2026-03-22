@@ -1,0 +1,26 @@
+# Test: Help page mobile layout (Web mode)
+# Tests help.html responsive layout at mobile viewport size
+# Run: maestro test --platform web --headless --screen-size 375x812 .maestro/web/help-web.yaml
+
+appId: http://localhost:8888/help.html
+---
+
+# Verify help page renders
+- assertVisible: "REDIRECTOR HELP"
+- assertVisible: "Table of contents"
+
+# Verify key sections exist
+- assertVisible: "What is Redirector?"
+- assertVisible: "Basic usage"
+- assertVisible: "Wildcards"
+- assertVisible: "Regular expressions"
+- assertVisible: "Examples"
+
+# Scroll and verify content sections
+- scrollUntilVisible:
+    element: "Static redirect"
+    direction: DOWN
+
+- scrollUntilVisible:
+    element: "Redirect http to https using wildcards"
+    direction: DOWN

@@ -1,0 +1,38 @@
+# Test: Settings page mobile layout (Web mode)
+# Tests redirector.html responsive layout at mobile viewport size
+# Run: maestro test --platform web --headless --screen-size 375x812 .maestro/web/settings-web.yaml
+
+appId: http://localhost:8888/redirector.html
+---
+
+# Verify main page elements render
+- assertVisible: "REDIRECTOR"
+- assertVisible: "Create new redirect"
+- assertVisible: "Import"
+- assertVisible: "Export"
+- assertVisible: "Organize"
+- assertVisible: "Help"
+
+# Test: Open create redirect form
+- tapOn: "Create new redirect"
+
+# Verify form renders with all labels
+- assertVisible: "Description:"
+- assertVisible: "Example URL:"
+- assertVisible: "Include pattern:"
+- assertVisible: "Redirect to:"
+- assertVisible: "Pattern type:"
+- assertVisible: "Wildcard"
+- assertVisible: "Regular Expression"
+
+# Test: Toggle advanced options
+- tapOn: "Show advanced options..."
+- assertVisible: "Exclude pattern:"
+- assertVisible: "Process matches:"
+- assertVisible: "Apply to:"
+
+# Test: Hide advanced options
+- tapOn: "Hide advanced options..."
+
+# Test: Cancel closes form
+- tapOn: "Cancel"
