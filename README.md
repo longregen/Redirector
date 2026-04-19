@@ -1,6 +1,19 @@
 ## Description
 Web browser extension (Firefox, Vivaldi, Chrome, Opera, Edge) to redirect URLs based on regex or wildcard patterns.
 
+## Screenshots
+
+A live screenshot gallery is auto-generated on every push to `main` and published
+to GitHub Pages: https://longregen.github.io/Redirector/
+
+To rebuild it locally:
+
+```bash
+npm ci
+npx playwright install --with-deps chromium
+npm run screenshots   # runs Playwright in SCREENSHOT_MODE and builds screenshots/index.html
+```
+
 ## Tribute
 In loving memory of Einar Egilsson, who gave us Redirector and selflessly nurtured it for many years.  We miss you Einar, and will always remember your kindness and generosity.
 
