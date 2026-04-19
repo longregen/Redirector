@@ -32,6 +32,22 @@ var justRedirected = {
 };
 var redirectThreshold = 3;
 
+// Periodically clean up stale tracking entries to prevent memory leaks
+setInterval(function() {
+	var now = new Date().getTime();
+	var staleThreshold = 30000; // 30 seconds
+	for (var url in ignoreNextRequest) {
+		if (Object.prototype.hasOwnProperty.call(ignoreNextRequest, url) && (now - ignoreNextRequest[url]) > staleThreshold) {
+			delete ignoreNextRequest[url];
+		}
+	}
+	for (var key in justRedirected) {
+		if (Object.prototype.hasOwnProperty.call(justRedirected, key) && (now - justRedirected[key].timestamp) > staleThreshold) {
+			delete justRedirected[key];
+		}
+	}
+}, 60000); // Run cleanup every 60 seconds
+
 function setIcon(image) {
 	var data = { 
 		path: {}
@@ -263,6 +279,13 @@ function updateIcon() {
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		log('Received background message: ' + JSON.stringify(request));
+
+		// Security: Only accept messages from our own extension
+		if (sender.id !== chrome.runtime.id) {
+			log('Rejected message from unknown sender: ' + sender.id);
+			return false;
+		}
+
 		if (request.type == 'get-redirects') {
 			log('Getting redirects from storage');
 			storageArea.get({
@@ -273,9 +296,15 @@ chrome.runtime.onMessage.addListener(
 				log('Sent redirects to content page');
 			});
 		} else if (request.type == 'save-redirects') {
+			if (!Array.isArray(request.redirects)) {
+				log('Invalid save-redirects request: redirects is not an array');
+				sendResponse({message: "Invalid redirects data"});
+				return true;
+			}
 			console.log('Saving redirects, count=' + request.redirects.length);
-			delete request.type;
-			storageArea.set(request, function (a) {
+			// Only save the redirects property, not the entire request object
+			var dataToSave = { redirects: request.redirects };
+			storageArea.set(dataToSave, function (a) {
 				if(chrome.runtime.lastError) {
 				 if(chrome.runtime.lastError.message.indexOf("QUOTA_BYTES_PER_ITEM quota exceeded")>-1){
 					log("Redirects failed to save as size of redirects larger than allowed limit per item by Sync");

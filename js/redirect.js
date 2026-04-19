@@ -223,12 +223,13 @@ Redirect.prototype = {
 		this.includePattern = o.includePattern || '';
 		this.excludePattern = o.excludePattern || '';
 		this.redirectUrl = o.redirectUrl || '';
-		this.patternType = o.patternType || Redirect.WILDCARD;
+		this.patternType = (o.patternType === Redirect.WILDCARD || o.patternType === Redirect.REGEX) ? o.patternType : Redirect.WILDCARD;
 
 		this.patternTypeText = this.patternType == 'W' ? 'Wildcard' : 'Regular Expression'
 
 		this.patternDesc = o.patternDesc || '';
-		this.processMatches = o.processMatches || 'noProcessing';
+		var validProcessMatches = ['noProcessing', 'urlEncode', 'urlDecode', 'doubleUrlDecode', 'base64decode'];
+		this.processMatches = (o.processMatches && validProcessMatches.indexOf(o.processMatches) !== -1) ? o.processMatches : 'noProcessing';
 		if (!o.processMatches && o.unescapeMatches) {
 			this.processMatches = 'urlDecode';
 		}
@@ -237,15 +238,23 @@ Redirect.prototype = {
 		}
 
 		this.disabled = !!o.disabled;
-		if (o.appliesTo && o.appliesTo.length) {
-			this.appliesTo = o.appliesTo.slice(0);
+		if (o.appliesTo && Array.isArray(o.appliesTo) && o.appliesTo.length) {
+			// Only allow known request types
+			this.appliesTo = o.appliesTo.filter(function(t) {
+				return typeof t === 'string' && t in Redirect.requestTypes;
+			});
+			if (this.appliesTo.length === 0) {
+				this.appliesTo = ['main_frame'];
+			}
 		} else {
 			this.appliesTo = ['main_frame'];
 		}
 	},
 
 	get appliesToText() {
-		return this.appliesTo.map(type => Redirect.requestTypes[type]).join(', ');
+		return this.appliesTo.map(function(type) {
+			return Object.prototype.hasOwnProperty.call(Redirect.requestTypes, type) ? Redirect.requestTypes[type] : type;
+		}).join(', ');
 	},
 
 	get processMatchesExampleText() {
@@ -257,11 +266,24 @@ Redirect.prototype = {
 			base64Decode : 'E.g. turn aHR0cDovL2Nubi5jb20= into http://cnn.com'
 		};
 
-		return examples[this.processMatches];
+		return Object.prototype.hasOwnProperty.call(examples, this.processMatches) ? examples[this.processMatches] : '';
 	},
 
 	toString : function() {
 		return JSON.stringify(this.toObject(), null, 2);
+	},
+
+	// Checks if a URL uses a safe scheme for redirection
+	_isSafeRedirectUrl : function(url) {
+		var trimmed = url.trim().toLowerCase();
+		if (trimmed.indexOf('javascript:') === 0 ||
+			trimmed.indexOf('data:') === 0 ||
+			trimmed.indexOf('vbscript:') === 0 ||
+			trimmed.indexOf('blob:') === 0 ||
+			trimmed.indexOf('file:') === 0) {
+			return false;
+		}
+		return true;
 	},
 
 	_includeMatch : function(url) {
@@ -276,20 +298,28 @@ Redirect.prototype = {
 		for (var i = matches.length - 1; i > 0; i--) {
 			var repl = matches[i] || '';
 			if (this.processMatches == 'urlDecode') {
-				repl = unescape(repl);
+				try { repl = decodeURIComponent(repl); } catch(e) { /* leave repl unchanged on malformed input */ }
 			} else if (this.processMatches == 'doubleUrlDecode') {
-				repl = unescape(unescape(repl));
+				try { repl = decodeURIComponent(decodeURIComponent(repl)); } catch(e) { /* leave repl unchanged on malformed input */ }
 			} else if (this.processMatches == 'urlEncode') {
 				repl = encodeURIComponent(repl);
 			} else if (this.processMatches == 'base64decode') {
-				if (repl.indexOf('%') > -1) {
-					repl = unescape(repl);
-				}
-				repl = atob(repl);
+				try {
+					if (repl.indexOf('%') > -1) {
+						repl = decodeURIComponent(repl);
+					}
+					repl = atob(repl);
+				} catch(e) { /* leave repl unchanged on malformed base64/URI input */ }
 			}
 			resultUrl = resultUrl.replace(new RegExp('\\$' + i, 'gi'), repl);
 		}
 		this._rxInclude.lastIndex = 0;
+
+		// Block redirects to dangerous URL schemes
+		if (!this._isSafeRedirectUrl(resultUrl)) {
+			return null;
+		}
+
 		return resultUrl;
 	},
 
