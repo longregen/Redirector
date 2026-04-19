@@ -6,3 +6,6 @@ ffox.sh
 devprofile/*
 debug.sh
 *.pem
+node_modules/
+test-results/
+playwright-report/

@@ -86,3 +86,48 @@ label span {
 		color: #ddd;
 	}
 }
+
+/* Mobile Firefox (Android) - popup opens as full page */
+@media (min-width: 300px) and (pointer: coarse) {
+	body {
+		width: 100%;
+		max-width: 400px;
+		margin: 0 auto;
+		padding: 16px;
+		box-sizing: border-box;
+	}
+
+	h1 {
+		font-size: 28px;
+		margin-top: 12px;
+	}
+
+	button {
+		height: 44px;
+		font-size: 16px;
+		margin: 10px auto !important;
+		border-radius: 6px;
+	}
+
+	.disabled {
+		height: 18px;
+		font-size: 14px;
+		margin-top: -10px;
+	}
+
+	label {
+		font-size: 16px !important;
+		padding: 8px 0;
+		width: 90%;
+	}
+
+	label input[type="checkbox"] {
+		width: 20px;
+		height: 20px;
+		margin-right: 8px;
+	}
+
+	label span {
+		font-size: 16px;
+	}
+}

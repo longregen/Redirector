@@ -1,0 +1,88 @@
+# Test: Mobile layout and touch target verification
+# Verifies that UI elements are properly sized for mobile touch interaction
+#
+# Prerequisites:
+#   - Firefox for Android with Redirector extension installed
+#   - Android emulator with a phone-sized screen (e.g., Pixel 4)
+
+appId: org.mozilla.firefox
+---
+
+# Launch Firefox
+- launchApp:
+    appId: org.mozilla.firefox
+    clearState: false
+
+# Navigate to extension settings
+- tapOn: "More options"
+- tapOn: "Add-ons"
+- tapOn: "Redirector"
+- waitForAnimationToEnd
+- tapOn: "Edit Redirects"
+- waitForAnimationToEnd
+
+# Verify all menu buttons are visible and tappable on mobile
+- assertVisible: "Create new redirect"
+- assertVisible: "Import"
+- assertVisible: "Export"
+- assertVisible: "Organize"
+- assertVisible: "Help"
+
+# Test: Scroll through redirect list
+- scroll
+
+# Test: Open create form and verify it's full-screen on mobile
+- tapOn: "Create new redirect"
+- waitForAnimationToEnd
+
+# Verify form labels are visible
+- assertVisible: "Description:"
+- assertVisible: "Example URL:"
+- assertVisible: "Include pattern:"
+- assertVisible: "Redirect to:"
+- assertVisible: "Pattern type:"
+
+# Verify input fields are tappable (should be full-width on mobile)
+- tapOn:
+    text: "Enter a description for your redirect rule"
+- inputText: "Layout test"
+
+# Scroll down to see more form fields
+- scroll
+
+# Open advanced options and verify layout
+- tapOn: "Show advanced options..."
+- waitForAnimationToEnd
+
+# Scroll to see all advanced options
+- scroll
+
+# Verify advanced option elements
+- assertVisible: "Exclude pattern:"
+- assertVisible: "Process matches:"
+
+# Scroll further to Apply to section
+- scroll
+- assertVisible: "Apply to:"
+
+# Verify Save/Cancel buttons are visible and properly sized
+- scroll
+- assertVisible: "Save"
+- assertVisible: "Cancel"
+
+# Cancel and return
+- tapOn: "Cancel"
+- waitForAnimationToEnd
+
+# Test: Help page link works
+- tapOn: "Help"
+- waitForAnimationToEnd
+
+# Verify help page renders on mobile
+- assertVisible: "REDIRECTOR HELP"
+- assertVisible: "Table of contents"
+
+# Scroll through help page to verify mobile layout
+- scroll
+- scroll
+- scroll

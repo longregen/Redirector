@@ -1,0 +1,85 @@
+# Test: Settings/Redirector page on mobile Firefox
+# Verifies the main settings page layout, create/edit form, and redirect list
+#
+# Prerequisites:
+#   - Firefox for Android with Redirector extension installed
+#   - Settings page opened (e.g., from popup "Edit Redirects")
+
+appId: org.mozilla.firefox
+---
+
+# Launch Firefox and navigate to the extension settings page
+- launchApp:
+    appId: org.mozilla.firefox
+    clearState: false
+
+# Navigate to extension settings page via add-ons menu
+- tapOn: "More options"
+- tapOn: "Add-ons"
+- tapOn: "Redirector"
+- waitForAnimationToEnd
+- tapOn: "Edit Redirects"
+- waitForAnimationToEnd
+
+# Verify main page elements are visible
+- assertVisible: "REDIRECTOR"
+- assertVisible: "Create new redirect"
+- assertVisible: "Import"
+- assertVisible: "Export"
+- assertVisible: "Organize"
+- assertVisible: "Help"
+
+# Verify the example redirect is shown (first-time user)
+- assertVisible: "Example redirect"
+
+# Test: Create new redirect form
+- tapOn: "Create new redirect"
+- waitForAnimationToEnd
+- assertVisible: "Create Redirect"
+- assertVisible: "Description:"
+- assertVisible: "Example URL:"
+- assertVisible: "Include pattern:"
+- assertVisible: "Redirect to:"
+- assertVisible: "Pattern type:"
+
+# Test: Fill out form fields on mobile
+- tapOn:
+    text: "Enter a description for your redirect rule"
+- inputText: "Test mobile redirect"
+
+- tapOn:
+    text: "http://example.com/some/path?a=1"
+- inputText: "http://mobile.example.com/page"
+
+- tapOn:
+    text: "Pattern that matches the urls you want to redirect"
+- inputText: "http://mobile.example.com/*"
+
+- tapOn:
+    text: "The url you want to redirect requests to"
+- inputText: "http://example.com/$1"
+
+# Verify example result is shown
+- waitForAnimationToEnd
+- assertVisible: "http://example.com/page"
+
+# Test: Pattern type radio buttons are tappable
+- tapOn: "Regular Expression"
+- waitForAnimationToEnd
+- tapOn: "Wildcard"
+- waitForAnimationToEnd
+
+# Test: Advanced options toggle
+- tapOn: "Show advanced options..."
+- waitForAnimationToEnd
+- assertVisible: "Exclude pattern:"
+- assertVisible: "Process matches:"
+- assertVisible: "Apply to:"
+
+# Test: Hide advanced options
+- tapOn: "Hide advanced options..."
+- waitForAnimationToEnd
+
+# Test: Cancel button
+- tapOn: "Cancel"
+- waitForAnimationToEnd

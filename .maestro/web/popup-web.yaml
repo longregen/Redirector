@@ -1,0 +1,18 @@
+# Test: Popup page mobile layout (Web mode)
+# Tests the popup.html responsive layout at mobile viewport size
+# Run: maestro test --platform web --headless --screen-size 375x812 .maestro/web/popup-web.yaml
+
+appId: http://localhost:8888/popup.html
+---
+
+# Verify popup elements render
+- assertVisible: "REDIRECTOR"
+- assertVisible: "Disable Redirector"
+- assertVisible: "Edit Redirects"
+- assertVisible: "Enable logging"
+- assertVisible: "Enable notifications"
+
+# Test button interactivity
+- tapOn: "Disable Redirector"
+- tapOn: "Enable logging"
+- tapOn: "Enable notifications"

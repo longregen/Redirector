@@ -1,0 +1,14 @@
+# Maestro configuration for Redirector extension testing on Firefox Android
+#
+# Prerequisites:
+#   1. Android emulator or device running with ADB connected
+#   2. Firefox for Android (org.mozilla.firefox) installed
+#   3. Redirector extension installed in Firefox
+#
+# Usage:
+#   maestro test .maestro/
+#
+# Run a single flow:
+#   maestro test .maestro/popup-flow.yaml
+
+appId: org.mozilla.firefox

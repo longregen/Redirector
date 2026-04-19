@@ -1,0 +1,51 @@
+# Test: Popup UI on mobile Firefox
+# Verifies the popup renders correctly and all interactive elements are tappable
+#
+# Prerequisites:
+#   - Firefox for Android with Redirector extension installed
+#   - Extension accessible via Firefox Add-ons menu
+
+appId: org.mozilla.firefox
+---
+
+# Launch Firefox
+- launchApp:
+    appId: org.mozilla.firefox
+    clearState: false
+
+# Wait for Firefox to be ready
+- waitForAnimationToEnd
+
+# Open the extensions/add-ons menu
+- tapOn: "More options"
+- tapOn: "Add-ons"
+
+# Tap on Redirector extension
+- tapOn: "Redirector"
+- waitForAnimationToEnd
+
+# Verify popup elements are visible
+- assertVisible: "REDIRECTOR"
+- assertVisible: "Disable Redirector"
+- assertVisible: "Edit Redirects"
+- assertVisible: "Enable logging"
+- assertVisible: "Enable notifications"
+
+# Test: Disable/Enable toggle
+- tapOn: "Disable Redirector"
+- waitForAnimationToEnd
+- assertVisible: "Disabled"
+- assertVisible: "Enable Redirector"
+
+# Re-enable
+- tapOn: "Enable Redirector"
+- waitForAnimationToEnd
+- assertNotVisible: "Disabled"
+
+# Test: Logging toggle
+- tapOn: "Enable logging"
+- waitForAnimationToEnd
+
+# Test: Navigate to Edit Redirects
+- tapOn: "Edit Redirects"
+- waitForAnimationToEnd
