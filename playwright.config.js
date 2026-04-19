@@ -1,10 +1,14 @@
 // @ts-check
 const { defineConfig, devices } = require('@playwright/test');
 
+const SCREENSHOT_MODE = process.env.SCREENSHOT_MODE === '1';
+
 module.exports = defineConfig({
   testDir: './e2e',
   timeout: 30000,
   retries: 0,
+  // In screenshot mode we only want the dedicated gallery spec.
+  testMatch: SCREENSHOT_MODE ? /screenshots\.spec\.js/ : /.*\.spec\.js/,
   reporter: [['list'], ['junit', { outputFile: 'test-results/e2e-results.xml' }]],
 
   use: {

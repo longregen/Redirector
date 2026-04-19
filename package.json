@@ -6,7 +6,9 @@
   "scripts": {
     "test": "npx playwright test",
     "test:mobile": "npx playwright test --project mobile-firefox",
-    "test:desktop": "npx playwright test --project desktop-chrome"
+    "test:desktop": "npx playwright test --project desktop-chrome",
+    "screenshots": "SCREENSHOT_MODE=1 npx playwright test && node scripts/build-gallery.js",
+    "screenshots:build": "node scripts/build-gallery.js"
   },
   "repository": {
     "type": "git",
