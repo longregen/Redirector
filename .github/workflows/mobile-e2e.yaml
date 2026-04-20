@@ -176,9 +176,13 @@ jobs:
           done
 
       - name: Install Firefox for Android
+        env:
+          FIREFOX_VERSION: "149.0.2"
         run: |
-          curl -L -o /tmp/firefox.apk \
-            "https://download.mozilla.org/?product=fenix-latest&os=android&lang=multi" && \
+          curl -fL --retry 3 --retry-delay 5 -o /tmp/firefox.apk \
+            "https://archive.mozilla.org/pub/fenix/releases/${FIREFOX_VERSION}/android/fenix-${FIREFOX_VERSION}-android-x86_64/fenix-${FIREFOX_VERSION}.multi.android-x86_64.apk"
+          file /tmp/firefox.apk
+          test "$(stat -c%s /tmp/firefox.apk)" -gt 10000000 || { echo "APK download too small"; exit 1; }
           adb install /tmp/firefox.apk
 
       - name: Download extension artifact
