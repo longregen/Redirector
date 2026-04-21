@@ -2,7 +2,7 @@
 //Dummy file to use while developing the UI. This way we can just develop it on a local fileserver, and don't have to reload
 //an extension for every tiny change!
 
-if (!chrome || !chrome.storage || !chrome.storage.local) {
+if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local) {
 
      let testData = {
         "createdBy": "Redirector v3.2",

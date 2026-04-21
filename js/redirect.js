@@ -241,7 +241,7 @@ Redirect.prototype = {
 		if (o.appliesTo && Array.isArray(o.appliesTo) && o.appliesTo.length) {
 			// Only allow known request types
 			this.appliesTo = o.appliesTo.filter(function(t) {
-				return typeof t === 'string' && t in Redirect.requestTypes;
+				return typeof t === 'string' && Object.prototype.hasOwnProperty.call(Redirect.requestTypes, t);
 			});
 			if (this.appliesTo.length === 0) {
 				this.appliesTo = ['main_frame'];

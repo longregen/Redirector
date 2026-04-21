@@ -71,7 +71,7 @@ function importRedirects(ev) {
 				patternType: (raw.patternType === 'W' || raw.patternType === 'R') ? raw.patternType : 'W',
 				processMatches: ['noProcessing','urlEncode','urlDecode','doubleUrlDecode','base64decode'].indexOf(raw.processMatches) !== -1 ? raw.processMatches : 'noProcessing',
 				disabled: !!raw.disabled,
-				appliesTo: Array.isArray(raw.appliesTo) ? raw.appliesTo.filter(function(t) { return typeof t === 'string' && t in Redirect.requestTypes; }) : ['main_frame']
+				appliesTo: Array.isArray(raw.appliesTo) ? raw.appliesTo.filter(function(t) { return typeof t === 'string' && Object.prototype.hasOwnProperty.call(Redirect.requestTypes, t); }) : ['main_frame']
 			};
 			var r = new Redirect(sanitized);
 			r.updateExampleResult();
