@@ -1,0 +1,65 @@
+# Dismisses Firefox for Android first-run onboarding if it appears.
+# Each step is a no-op when its target element is not visible, so this
+# subflow is safe to invoke from every test regardless of launch order.
+#
+# Tagged "subflow" so `maestro test .maestro/` can exclude it from the
+# top-level test sweep via --exclude-tags.
+
+appId: org.mozilla.firefox
+tags:
+  - subflow
+---
+
+# Terms of Use / welcome card (Nova onboarding, Firefox 120+)
+- runFlow:
+    when:
+      visible: "Accept and continue"
+    commands:
+      - tapOn: "Accept and continue"
+      - waitForAnimationToEnd
+
+- runFlow:
+    when:
+      visible: "Agree and continue"
+    commands:
+      - tapOn: "Agree and continue"
+      - waitForAnimationToEnd
+
+# Android 13+ runtime notification permission dialog
+- runFlow:
+    when:
+      visible: "Don’t allow"
+    commands:
+      - tapOn: "Don’t allow"
+      - waitForAnimationToEnd
+
+- runFlow:
+    when:
+      visible: "Don't allow"
+    commands:
+      - tapOn: "Don't allow"
+      - waitForAnimationToEnd
+
+# "Set as default browser" card
+- runFlow:
+    when:
+      visible: "Skip"
+    commands:
+      - tapOn: "Skip"
+      - waitForAnimationToEnd
+
+# "Sign in to sync" card
+- runFlow:
+    when:
+      visible: "Not now"
+    commands:
+      - tapOn: "Not now"
+      - waitForAnimationToEnd
+
+# Some onboarding variants end with an explicit "Start browsing" button
+- runFlow:
+    when:
+      visible: "Start browsing"
+    commands:
+      - tapOn: "Start browsing"
+      - waitForAnimationToEnd

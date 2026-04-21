@@ -13,6 +13,8 @@ appId: org.mozilla.firefox
     appId: org.mozilla.firefox
     clearState: false
 
+- runFlow: shared/dismiss-onboarding.yaml
+
 # Wait for Firefox to be ready
 - waitForAnimationToEnd
 

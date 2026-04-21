@@ -204,7 +204,7 @@ jobs:
         timeout-minutes: 20
         run: |
           maestro test .maestro/ \
-            --exclude-tags web-only \
+            --exclude-tags web-only,subflow \
             --format junit \
             --output maestro-results.xml \
             || true

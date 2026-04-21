@@ -13,6 +13,8 @@ appId: org.mozilla.firefox
     appId: org.mozilla.firefox
     clearState: false
 
+- runFlow: shared/dismiss-onboarding.yaml
+
 # Navigate to extension settings page via add-ons menu
 - tapOn: "More options"
 - tapOn: "Add-ons"
