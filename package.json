@@ -4,9 +4,11 @@
   "description": "Web browser extension (Firefox, Vivaldi, Chrome, Opera, Edge) to redirect URLs based on regex or wildcard patterns.",
   "main": "index.js",
   "scripts": {
+    "lint": "node scripts/lint.js",
     "test": "npx playwright test",
     "test:mobile": "npx playwright test --project mobile-firefox",
     "test:desktop": "npx playwright test --project desktop-chrome",
+    "build": "python3 build.py",
     "screenshots": "SCREENSHOT_MODE=1 npx playwright test && node scripts/build-gallery.js",
     "screenshots:build": "node scripts/build-gallery.js"
   },

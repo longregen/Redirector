@@ -3,19 +3,26 @@
 import os, os.path, re, zipfile, json
 
 def get_files_to_zip():
-	#Exclude git stuff, build scripts etc.
+	#Exclude git stuff, build scripts, test tooling etc. — anything that is
+	#not part of the shipped extension. Keeping this tight matters: the
+	#Firefox AMO validator rejects packages full of node_modules and AMO
+	#signing has a soft file-count limit.
 	exclude = [
 		r'\.(py|sh|pem)$', #file endings
-		r'(\\|/)\.', #hidden files
-		r'package\.json|icon\.html', #file names
-		r'(\\|/)(promo|unittest|build)(\\|/)' #folders
+		r'(\\|/)\.', #hidden files / folders (.git, .github, .maestro, ...)
+		r'^\.(\\|/)(package-lock\.json|playwright\.config\.js)$', #top-level tooling files
+		r'package(-lock)?\.json$|icon\.html$', #file names (extension uses manifest.json, not package.json)
+		r'(^|\\|/)(promo|unittest|build|node_modules|e2e|scripts|screenshots|test-results|playwright-report)(\\|/)' #folders
 	]
 
 	zippable_files = []
+	skip_dirs = {'node_modules', 'e2e', 'scripts', 'screenshots', 'test-results', 'playwright-report', 'promo', 'unittest', 'build'}
 	for root, folders, files in os.walk('.'):
+		#Prune excluded directories in-place so os.walk doesn't descend into them.
+		folders[:] = [d for d in folders if d not in skip_dirs and not d.startswith('.')]
 		print(root)
 		for f in files:
-			file = os.path.join(root,f)
+			file = os.path.join(root, f)
 			if not any(re.search(p, file) for p in exclude):
 				zippable_files.append(file)
 	return zippable_files
