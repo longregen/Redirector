@@ -1,0 +1,148 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: npm audit (fail on high+)
+        # `npm audit` ignores `overrides`, so we explicitly run with the
+        # production tree only and fail on high or critical advisories.
+        run: npm audit --audit-level=high --omit=dev
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  android-build:
+    # Name kept to match the reference CI. For this browser extension,
+    # "android build" means producing the Firefox .xpi that Fenix/Firefox
+    # for Android installs — the same artifact consumed by the Maestro
+    # emulator job in mobile-e2e.yaml.
+    name: android-build
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build Firefox .xpi
+        run: python3 build.py
+
+      - name: Verify build does not leak node_modules or tests
+        run: |
+          set -e
+          xpi=build/redirector-firefox.xpi
+          test -f "$xpi"
+          leaks=$(unzip -l "$xpi" | awk '{print $NF}' \
+            | grep -E '^(node_modules/|e2e/|scripts/|test-results/|playwright-report/|screenshots/|\.github/|\.maestro/)' \
+            || true)
+          if [ -n "$leaks" ]; then
+            echo "Build leaked files that should be excluded:"
+            echo "$leaks"
+            exit 1
+          fi
+          count=$(unzip -l "$xpi" | tail -1 | awk '{print $2}')
+          echo "xpi entries: $count"
+          test "$count" -lt 200
+
+      - name: Upload Firefox extension artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: redirector-firefox-xpi
+          path: build/redirector-firefox.xpi
+          retention-days: 7

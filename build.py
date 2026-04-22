@@ -10,7 +10,7 @@ def get_files_to_zip():
 	exclude = [
 		r'\.(py|sh|pem)$', #file endings
 		r'(\\|/)\.', #hidden files / folders (.git, .github, .maestro, ...)
-		r'^\.(\\|/)(package-lock\.json|playwright\.config\.js)$', #top-level tooling files
+		r'^\.(\\|/)(package-lock\.json|playwright\.config\.js|tsconfig\.json)$', #top-level tooling files
 		r'package(-lock)?\.json$|icon\.html$', #file names (extension uses manifest.json, not package.json)
 		r'(^|\\|/)(promo|unittest|build|node_modules|e2e|scripts|screenshots|test-results|playwright-report)(\\|/)' #folders
 	]
